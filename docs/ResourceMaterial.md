@@ -20,7 +20,9 @@ Backend:
 
 
 Data:
-*  https://dba.stackexchange.com/questions/1742/how-to-insert-file-data-into-a-postgresql-bytea-column
+* https://dba.stackexchange.com/questions/1742/how-to-insert-file-data-into-a-postgresql-bytea-column
+* https://blog.devgenius.io/part-1-containerized-backend-with-flask-and-postgresql-f28e48c96224
+*
 
 
 Frontend:

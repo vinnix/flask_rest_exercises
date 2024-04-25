@@ -2,6 +2,7 @@ blinker
 click
 Flask
 Flask-SQLAlchemy
+flask_restful
 greenlet
 importlib-metadata
 itsdangerous

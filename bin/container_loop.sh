@@ -19,7 +19,7 @@ su - postgres -c "/opt/postgres/pgsql_16_2/bin/pg_ctl start -D /opt/postgres/pgs
 
 
 # Sart app
-/usr/bin/python3 /opt/app/app.py >> /opt/log/app.log 2>&1
+/usr/bin/python3 /opt/app/flask/app.py >> /opt/log/app.log 2>&1 &
 
 
 # Option 1:

@@ -1,12 +1,19 @@
 <html>
   <head>
     <title>DBTune / Triarius - File Uploader </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-  <style>
-.test {
+    <script>
+        this.on("queuecomplete", function (file) {
+                location.reload();
+               });
+    </script>
+
+   <style>
+   .test {
     width:800px;
     margin:auto;
     text-align:center;
@@ -14,7 +21,11 @@
     background-color:#99CCFF;
     border:2px solid black;
     font-family: 'Alegreya SC'; font-size: 22px;
-}
+   }
+   .h3 {
+    width:100px;
+    margin: off;
+   }
   </style>
   </head>
   <body>
@@ -30,9 +41,9 @@
       </table>
     <form action="{{ url_for('index') }}" class="dropzone">
     </form>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>
   </body>
   <hr>
+    <h3>Uploads from other sessions:</h3> 
    {% for file in files %}
      <img src="{{ url_for('upload', filename=file) }}" style="width: 64px">
    {% endfor %}

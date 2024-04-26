@@ -24,7 +24,9 @@ Data:
 * https://blog.devgenius.io/part-1-containerized-backend-with-flask-and-postgresql-f28e48c96224
 *
 
+Network:
+* https://serverfault.com/questions/411538/configure-ufw-to-redirect-http-traffic-to-another-ip
 
 Frontend:
-
 * https://stackoverflow.com/questions/8499633/how-to-display-base64-images-in-html
+* https://stackoverflow.com/questions/20646822/how-to-serve-static-files-in-fl

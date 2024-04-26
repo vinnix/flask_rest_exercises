@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <title>File Upload</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.css">
+  </head>
+  <body>
+    <h3>File Upload</h3>
+    <form action="{{ url_for('index') }}" class="dropzone">
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.7.1/min/dropzone.min.js"></script>
+  </body>
+  <hr>
+   {% for file in files %}
+     <img src="{{ url_for('upload', filename=file) }}" style="width: 64px">
+   {% endfor %}
+</html>
+

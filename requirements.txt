@@ -13,3 +13,4 @@ SQLAlchemy
 typing_extensions
 Werkzeug
 zipp
+pillow

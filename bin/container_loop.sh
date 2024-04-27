@@ -19,10 +19,10 @@ su - postgres -c "/opt/postgres/pgsql_16_2/bin/pg_ctl start -D /opt/postgres/pgs
 
 
 # Sart app
-pip -r /opt/requirements.txt 
+/home/python/.pyenv/shims/pip install -r /opt/requirements.txt >> /opt/log/install_requirements.log 2>&1 &
 
 
-python3 /opt/app/flask/application.py >> /opt/log/app.log 2>&1 &
+/home/python/.pyenv/shims/python /opt/app/flask/application.py >> /opt/log/app.log 2>&1 &
 
 # Option 1:
 # while true; do sleep 30; done;

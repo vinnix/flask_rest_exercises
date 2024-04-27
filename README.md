@@ -27,11 +27,22 @@ Challange: Implement a system that allows a user to upload images through a REST
 
 
 
-## To run:
+## Install and run:
 
+``` 
 	git clone https://github.com/vinnix/dbtune_interview.git
 	cd dbtune_interview
-	git pull vinnix/ubuntu_image:v9
+	docker pull vinnix/ubuntu_image:v15
+	
+	docker create vinnix/ubuntu_image:v15
+	docker start <container id>
+	docker exec -it <container id> /bin/bash
+``` 
+Service will be at:
+	http://ip:5100/
+
+Test(curl based):
+	bin/put_image.sh
 
 
 ## Next steps:

@@ -1,4 +1,4 @@
-FROM vinnix/ubuntu_base:v11
+FROM vinnix/ubuntu_base:v15
 
 MAINTAINER "Vinícius Schmidt"
 

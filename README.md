@@ -36,5 +36,6 @@ Challange: Implement a system that allows a user to upload images through a REST
 
 ## Next steps:
 
-	[] Align code with deployment on container
-	[] 
+	[X] Align code with deployment on container
+	[ ] More details about th eproject at:
+	    https://github.com/users/vinnix/projects/2/views/1

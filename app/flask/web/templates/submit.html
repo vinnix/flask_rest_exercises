@@ -2,12 +2,16 @@
   <head>
     <title>DBTune / Triarius - File Uploader </title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/min/dropzone.min.css">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-	Dropzone.options.dropzoneJsForm = {
+
+// Initialise DropZone form control
+// dropzoneJsForm = the id of your dropzone form
+Dropzone.options.dropzoneJsForm = {
     maxFilesize: 10, // Mb
     init: function () {
         // Set up any event handlers
@@ -16,6 +20,8 @@
         });
     }
 };
+
+
     </script>
 
    <style>
@@ -45,7 +51,7 @@
         </td>
        </tr>
       </table>
-    <form action="{{ url_for('index') }}" class="dropzone">
+    <form action="{{ url_for('index') }}" class="dropzone" id="dropzone-example2">
     </form>
   </body>
   <hr>

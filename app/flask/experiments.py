@@ -1,3 +1,7 @@
+
+import logging
+
+
 from flask import Flask, request
 from flask_restful import Resource, Api
 from flask import send_from_directory
@@ -9,7 +13,7 @@ from flask import Flask, render_template, request
 import sys
 import os
 
-
+import model.py
 
 
 
@@ -38,6 +42,12 @@ if sys.argv.__len__() > 1:
     app_port = sys.argv[1]
 print("Api running on port: {} ".format(app_port))
 
+# Configure Flask logging
+app.logger.setLevel(logging.INFO)  # Set log level to INFO
+handler = logging.FileHandler('experiments.log')  # Log to a file
+app.logger.addHandler(handler)
+
+
 
 
 #############################################################################
@@ -53,14 +63,23 @@ api = Api(app)
 class Car(db.Model):
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
     carname: Mapped[str] = mapped_column(db.String, unique=True, nullable=False)
+    company: Mapped[str] = mapped_column(db.String, unique=True, nullable=False)
+
+class Company(db.Model):
+    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
+    companyname: Mapped[str] = mapped_column(db.String, unique=True, nullable=False)
 
 
+## This initialize/create tables and databases based on the DB Model 
+## if not created already
+with app.app_context():
+    db.create_all()
 
-def insert_car():
+#
+#
+def insert_car(name,company):
     with app.app_context():
-        db.create_all()
-        db.session.add(Car(carname="Beetle3"))
-        db.session.add(Car(carname="Camaro3"))
+        db.session.add(Car(carname=name,company=company))
 
         try:
             db.session.commit()
@@ -70,6 +89,15 @@ def insert_car():
                 return False, "error, username already exists (%s)" % username
             elif "FOREIGN KEY constraint failed" in str(err):
                 return False, "supplier does not exist"
+            elif "duplicate key value violates unique constraint" in str(err):
+                #app.logger.info('')
+                #app.logger.debug('')
+                #app.logger.warning('')
+                #app.logger.error('')
+                errm = "[CRITICAL] Duplicate key error (%s)" % (err)
+                app.logger.critical(errm)
+
+                return False, "Duplicate key"
             else:
                 return False, "unknown error adding user"
 
@@ -78,7 +106,19 @@ def insert_car():
         return cars
 
 
-insert_car()
+insert_car("Vectra","Chevrolet")
+insert_car("Beattle","VW")
+
+
+#############################################################################
+# App exceptions
+#############################################################################
+@app.errorhandler(500)
+def server_error(error):
+    app.logger.exception('An exception occurred during a request.')
+    return 'Internal Server Error', 500
+
+
 
 
 #############################################################################

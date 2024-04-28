@@ -2,6 +2,7 @@ from flask import Flask, request
 from flask_restful import Resource, Api
 from flask import send_from_directory
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import exc
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from flask import Flask, render_template, request
@@ -15,8 +16,6 @@ import os
 
 
 
-class Base(DeclarativeBase):
-      pass
 
 
 
@@ -31,33 +30,55 @@ app = Flask(__name__,
 
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://image_app:im4g3_4pp@localhost/image'
+app_port = 5100
 
+# Port number can be overrided
+
+if sys.argv.__len__() > 1:
+    app_port = sys.argv[1]
+print("Api running on port: {} ".format(app_port))
+
+
+
+#############################################################################
+# SQLAlchemy and Flask integration
+#############################################################################
+
+class Base(DeclarativeBase):
+      pass
 
 db = SQLAlchemy(app, model_class=Base)
+api = Api(app)
 
 class Car(db.Model):
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
     carname: Mapped[str] = mapped_column(db.String, unique=True, nullable=False)
 
-with app.app_context():
-    db.create_all()
-    db.session.add(Car(carname="Beetle"))
-    db.session.add(Car(carname="Camaro"))
-    db.session.commit()
-    cars = db.session.execute(db.select(Car)).scalars()
-
-api = Api(app)
-port = 5100
-
-# Port number can be overrided
-
-if sys.argv.__len__() > 1:
-    port = sys.argv[1]
-print("Api running on port: {} ".format(port))
 
 
+def insert_car():
+    with app.app_context():
+        db.create_all()
+        db.session.add(Car(carname="Beetle3"))
+        db.session.add(Car(carname="Camaro3"))
+
+        try:
+            db.session.commit()
+        except exc.IntegrityError as err:
+            db.session.rollback()
+            if "UNIQUE constraint failed: car.carname" in str(err):
+                return False, "error, username already exists (%s)" % username
+            elif "FOREIGN KEY constraint failed" in str(err):
+                return False, "supplier does not exist"
+            else:
+                return False, "unknown error adding user"
 
 
+        cars = db.session.execute(db.select(Car)).scalars()
+        return cars
+
+
+insert_car()
 
 
 #############################################################################
@@ -113,8 +134,6 @@ def send_report(path):
         return send_from_directory('ui', path)
 
 
-#############################################################################
-
 
 
 #############################################################################
@@ -122,7 +141,7 @@ def send_report(path):
 #############################################################################
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=port)
+    app.run(host="0.0.0.0", port=app_port)
 
 
 

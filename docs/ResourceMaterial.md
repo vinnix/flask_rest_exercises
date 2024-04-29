@@ -18,6 +18,7 @@ Backend:
 * https://dba.stackexchange.com/questions/1742/how-to-insert-file-data-into-a-postgresql-bytea-column
 * https://blog.miguelgrinberg.com/post/handling-file-uploads-with-flask (very good!)
 * https://github.com/StefanieStoppel/vue-flask-image-upload
+* https://www.j-labs.pl/blog-technologiczny/flask-restful-with-sqlalchemy/
 
 Data:
 * https://dba.stackexchange.com/questions/1742/how-to-insert-file-data-into-a-postgresql-bytea-column

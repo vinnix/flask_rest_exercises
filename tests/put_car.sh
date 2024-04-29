@@ -1,6 +1,17 @@
 #!/bin/env bash
 
 
+re='^[0-9]+$'
+if [[ "$1" =~ $re  ]];
+then
+    id=$1
+else
+    echo "Your 1st parameter must be a number. Id of Car."
+    echo "Existing the test."
+    exit
+fi
+
+
 
 if [[ "$2" == "" ]];
 then
@@ -16,8 +27,10 @@ else
     company="$3"
 fi
 
-post_new_car(){
-    curl -X POST  http://localhost:5100/cars \
+
+
+put_update_car(){
+    curl -X PUT  http://localhost:5100/record/$id \
         -H 'Content-Type: application/json' \
         -d "{
             \"carname\": \"$car\",
@@ -27,11 +40,5 @@ post_new_car(){
 
 
 
-post_new_car;
+put_update_car;
 
-if [[ "$1" == "duplicate" ]];
-then
-
-    post_new_car;
-
-fi

@@ -3,7 +3,7 @@ import logging
 
 
 from flask import Flask, request
-from flask_restful import Resource, Api
+from flask_restful import Resource, Api, abort, reqparse
 from flask import send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import exc
@@ -12,14 +12,6 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask import Flask, render_template, request
 import sys
 import os
-
-import model.py
-
-
-
-
-
-
 
 
 
@@ -47,6 +39,10 @@ app.logger.setLevel(logging.INFO)  # Set log level to INFO
 handler = logging.FileHandler('experiments.log')  # Log to a file
 app.logger.addHandler(handler)
 
+# Parsing options
+parser = reqparse.RequestParser(bundle_errors=True)
+parser.add_argument('carname', type=str, required=True, help="car name is a required parameter!")
+parser.add_argument('company', type=str, required=True, help="company required parameter!")
 
 
 
@@ -60,27 +56,39 @@ class Base(DeclarativeBase):
 db = SQLAlchemy(app, model_class=Base)
 api = Api(app)
 
-class Car(db.Model):
-    id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
+class CarRecord(db.Model):
+    id: Mapped[int] = mapped_column(db.Integer, primary_key=True, nullable=False)
     carname: Mapped[str] = mapped_column(db.String, unique=True, nullable=False)
     company: Mapped[str] = mapped_column(db.String, unique=True, nullable=False)
 
-class Company(db.Model):
+    def serialize(self):
+        return {
+            'id': self.id,
+            'carName': self.carname,
+            'company': self.company
+        }
+
+
+class CompanyRecord(db.Model):
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
     companyname: Mapped[str] = mapped_column(db.String, unique=True, nullable=False)
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'companyName': self.companyname
+        }
 
-## This initialize/create tables and databases based on the DB Model 
-## if not created already
-with app.app_context():
-    db.create_all()
+class CarsList(Resource):
+    def get(self):
+        records = CarRecord.query.all()
+        return [CarRecord.serialize(record) for record in records]
 
-#
-#
-def insert_car(name,company):
-    with app.app_context():
-        db.session.add(Car(carname=name,company=company))
-
+    def post(self):
+        args = parser.parse_args()
+        car_record = CarRecord(carname=args['carname'], company=args['company'])
+        db.session.add(car_record)
+            
         try:
             db.session.commit()
         except exc.IntegrityError as err:
@@ -101,12 +109,70 @@ def insert_car(name,company):
             else:
                 return False, "unknown error adding user"
 
+        try:
+            return [CarRecord.serialize(car_record)] , 201
+        except AttributeError as err:
+            errm = "[CRITICAL] Attribute ID unable to serialize" 
+            app.logger.critical(errm)
+            return "Insert failed",422
 
-        cars = db.session.execute(db.select(Car)).scalars()
+class Cars(Resource):
+    def put(self, record_id):
+        args = parser.parse_args()
+        record = CarRecord.query.filter_by(id=record_id)\
+            .first_or_404(description='Record with id={} is not available'.format(record_id))
+        record.carname = args['carname']
+        record.company = args['company']
+        db.session.commit()
+        return CarRecord.serialize(record), 201
+
+
+
+    def delete(self, record_id):
+        record = CarRecord.query.filter_by(id=record_id)\
+            .first_or_404(description='Record with id={} is not available'.format(record_id))
+        db.session.delete(record)
+        db.session.commit()
+        return '', 204
+
+
+
+
+
+## This initialize/create tables and databases based on the DB Model 
+## if not created already
+with app.app_context():
+    db.create_all()
+
+#
+#
+def insert_car(name,company):
+    with app.app_context():
+        db.session.add(CarRecord(carname=name,company=company))
+        try:
+            db.session.commit()
+        except exc.IntegrityError as err:
+            db.session.rollback()
+            if "UNIQUE constraint failed: car.carname" in str(err):
+                return False, "error, username already exists (%s)" % username
+            elif "FOREIGN KEY constraint failed" in str(err):
+                return False, "supplier does not exist"
+            elif "duplicate key value violates unique constraint" in str(err):
+                #app.logger.info('')
+                #app.logger.debug('')
+                #app.logger.warning('')
+                #app.logger.error('')
+                errm = "[CRITICAL] Duplicate key error (%s)" % (err)
+                app.logger.critical(errm)
+
+                return False, "Duplicate key"
+            else:
+                return False, "unknown error adding user"
+
+        cars = db.session.execute(db.select(CarRecord)).scalars()
         return cars
 
 
-insert_car("Vectra","Chevrolet")
 insert_car("Beattle","VW")
 
 
@@ -117,7 +183,6 @@ insert_car("Beattle","VW")
 def server_error(error):
     app.logger.exception('An exception occurred during a request.')
     return 'Internal Server Error', 500
-
 
 
 
@@ -140,9 +205,12 @@ class test_db(Resource):
         def get(self):
             return {'testing': 'database'}
 
+#
 # Associating API with path
+#
 api.add_resource(test_db,'/db')
-
+api.add_resource(CarsList, '/cars')
+api.add_resource(Cars, '/record/<record_id>')
 
 #############################################################################
 

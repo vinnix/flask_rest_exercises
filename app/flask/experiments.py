@@ -59,7 +59,7 @@ api = Api(app)
 class CarRecord(db.Model):
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True, nullable=False)
     carname: Mapped[str] = mapped_column(db.String, unique=True, nullable=False)
-    company: Mapped[str] = mapped_column(db.String, unique=True, nullable=False)
+    company: Mapped[str] = mapped_column(db.String, unique=False, nullable=False)
 
     def serialize(self):
         return {

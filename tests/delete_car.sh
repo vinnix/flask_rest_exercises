@@ -2,4 +2,4 @@
 
 
 
-curl -X DELETE http://localhost:5100/record/$1
+curl -X DELETE http://localhost:5100/car/$1

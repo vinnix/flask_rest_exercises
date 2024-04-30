@@ -57,18 +57,22 @@ db = SQLAlchemy(app, model_class=Base)
 api = Api(app)
 
 class CarRecord(db.Model):
+    __tablename__ = 'car'
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True, nullable=False)
     carname: Mapped[str] = mapped_column(db.String, unique=True, nullable=False)
     company: Mapped[str] = mapped_column(db.String, unique=False, nullable=False)
+    picture: Mapped[str] = mapped_column(db.LargeBinary, unique=False, nullable=True)
 
     def serialize(self):
         return {
             'id': self.id,
             'carName': self.carname,
-            'company': self.company
+            'company': self.company,
+            'picture': self.picture
         }
 
 
+#############################################################################
 class CompanyRecord(db.Model):
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True)
     companyname: Mapped[str] = mapped_column(db.String, unique=True, nullable=False)
@@ -78,6 +82,10 @@ class CompanyRecord(db.Model):
             'id': self.id,
             'companyName': self.companyname
         }
+
+#############################################################################
+#
+#############################################################################
 
 class CarsList(Resource):
     def get(self):
@@ -116,7 +124,10 @@ class CarsList(Resource):
             app.logger.critical(errm)
             return "Insert failed",422
 
-class Cars(Resource):
+#############################################################################
+#
+#############################################################################
+class Car(Resource):
     def put(self, record_id):
         args = parser.parse_args()
         record = CarRecord.query.filter_by(id=record_id)\
@@ -138,6 +149,9 @@ class Cars(Resource):
 
 
 
+#############################################################################
+#
+#############################################################################
 
 ## This initialize/create tables and databases based on the DB Model 
 ## if not created already
@@ -210,7 +224,7 @@ class test_db(Resource):
 #
 api.add_resource(test_db,'/db')
 api.add_resource(CarsList, '/cars')
-api.add_resource(Cars, '/record/<record_id>')
+api.add_resource(Car, '/car/<record_id>')
 
 #############################################################################
 

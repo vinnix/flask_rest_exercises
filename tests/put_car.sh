@@ -30,7 +30,7 @@ fi
 
 
 put_update_car(){
-    curl -X PUT  http://localhost:5100/record/$id \
+    curl -X PUT  http://localhost:5100/car/$id \
         -H 'Content-Type: application/json' \
         -d "{
             \"carname\": \"$car\",

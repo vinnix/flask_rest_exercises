@@ -2,8 +2,9 @@
 
 file_path="./"
 file_name="chinese-dragon.png"
-host_addr="http://127.0.0.1:5100"
-method="/api/submit"
+host_addr="127.0.0.1"
+port=5100
+method="multi_add"
 
 if [[ "$2" == "" ]];
 then
@@ -21,31 +22,9 @@ fi
 
 
 
+curl -X POST -H "Content-Type: multipart/form-data" \
+     -F "file=<chinese-dragon.png" \
+     -F "json_data={\"carname\":\"$car\",\"company\":\"$company\"}" \
+     http://$host_addr:$port/$method
 
 
-
-
-curl -i -X POST -H "Content-Type: multipart/mixed" -F "file=@${file_path}${file_name}" \
-    -F  "{
-            \"carname\": \"$car\",
-            \"company\": \"$company\"
-        };type=application/json" \
-     http://localhost:5100/cars
-
-
-exit
-
-## 302 means the test was OK, so we can supress the output
-## Otherwise we show error message with the complete output
-## Alternatively, for the next version we could check the md5/sha256
-## with the .png file and the one found on the other side
-
-if [[ $RESULT =~ "302" ]];
-then
-    echo "SUCESS!"
-    echo "Upload done!"
-else
-    echo "!!! ERROR !!!"
-    echo "Full output:"
-    echo ${RESULT}
-fi

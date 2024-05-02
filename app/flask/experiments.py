@@ -12,7 +12,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask import Flask, render_template, request
 import sys
 import os
-
+import json
 
 
 #############################################################################
@@ -160,9 +160,9 @@ with app.app_context():
 
 #
 #
-def insert_car(name,company):
+def insert_car(name,company,picture=None):
     with app.app_context():
-        db.session.add(CarRecord(carname=name,company=company))
+        db.session.add(CarRecord(carname=name, company=company, picture=picture))
         try:
             db.session.commit()
         except exc.IntegrityError as err:
@@ -187,7 +187,7 @@ def insert_car(name,company):
         return cars
 
 
-insert_car("Beattle","VW")
+#insert_car("Beattle","VW")
 
 
 #############################################################################
@@ -254,6 +254,25 @@ def upload_file():
 @app.route('/ui/<path:path>')
 def send_report(path):
         return send_from_directory('ui', path)
+
+
+@app.route('/multi_add', methods=['POST'])
+def multi_add():
+    if request.headers['Content-Type'].startswith('multipart/form-data'):
+        app.logger.info('multi-form data')
+        json_data=request.form.get("json_data")
+        jd = json.loads(json_data)
+
+        file_data=request.form.get("file")
+
+        path = os.path.join(app.config['UPLOAD_FOLDER'], 'dragon2.png')
+        file_data.save(path)
+
+        app.logger.info('filedata...')
+        #app.logger.info(file_data)
+        insert_car(jd['carname'],jd['company'])
+        return "200 Ok" 
+
 
 
 

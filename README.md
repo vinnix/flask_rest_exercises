@@ -10,7 +10,7 @@ Objectice: Learn more about python and webframework flask using REST techniques
 ## Approach used:
 
 	* Mapping activities on https://github.com/users/vinnix/projects/2/views/1 (Kanban board)
-	* Saving links of interest and studying the problem: https://github.com/vinnix/dbtune_interview/blob/main/docs/ResourceMaterial.md
+	* Saving links of interest and studying the problem: https://github.com/vinnix/flask_rest_exercises/blob/main/docs/ResourceMaterial.md
 	* Studying Docker and its mechanisms to create: https://gist.github.com/vinnix/d6b7523753ae72d66c3548b54ce59918
 
 
@@ -31,7 +31,7 @@ Objectice: Learn more about python and webframework flask using REST techniques
 ## Install and run:
 
 ``` 
-	git clone https://github.com/vinnix/dbtune_interview.git
+	git clone https://github.com/vinnix/flask_rest_exercises.git
 	cd dbtune_interview
 	docker pull vinnix/ubuntu_image:v15
 	

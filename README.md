@@ -1,10 +1,11 @@
-# dbtune_interview
+# Python/Flask exercises and study 
 
-## Interview With DBTune Team
+## Objectices and challanges
 
 Challange: Implement a system that allows a user to upload images through a REST backend application in any language. 
            Using a simple front end, later on to communicate with it. No authentication for now. 
 
+Objectice: Learn more about python and webframework flask using REST techniques
 
 ## Approach used:
 

@@ -20,10 +20,11 @@ then
             company="$3"
 fi
 
-
+ #-F "file=@${file_path}${file_name}" \ # binary file
+ #-F "file=<script.sh" \                # test file
 
 curl -X POST -H "Content-Type: multipart/form-data" \
-     -F "file=<chinese-dragon.png" \
+     -F "file=@chinese-dragon.png" \
      -F "json_data={\"carname\":\"$car\",\"company\":\"$company\"}" \
      http://$host_addr:$port/$method
 

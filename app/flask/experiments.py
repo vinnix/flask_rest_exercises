@@ -13,6 +13,10 @@ from flask import Flask, render_template, request
 import sys
 import os
 import json
+from base64 import b64encode
+
+import binascii
+
 
 
 #############################################################################
@@ -43,6 +47,7 @@ app.logger.addHandler(handler)
 parser = reqparse.RequestParser(bundle_errors=True)
 parser.add_argument('carname', type=str, required=True, help="car name is a required parameter!")
 parser.add_argument('company', type=str, required=True, help="company required parameter!")
+parser.add_argument('picture', type=bytes, required=False, help="picture of a car!")
 
 
 
@@ -61,14 +66,19 @@ class CarRecord(db.Model):
     id: Mapped[int] = mapped_column(db.Integer, primary_key=True, nullable=False)
     carname: Mapped[str] = mapped_column(db.String, unique=True, nullable=False)
     company: Mapped[str] = mapped_column(db.String, unique=False, nullable=False)
-    picture: Mapped[str] = mapped_column(db.LargeBinary, unique=False, nullable=True)
+    picture: Mapped[bytes] = mapped_column(db.LargeBinary, unique=False, nullable=True)
 
     def serialize(self):
+        if self.picture != None:
+            img = binascii.b2a_base64(self.picture).decode().rstrip('\n')
+        else:
+            img = '<image-empty>'
+
         return {
             'id': self.id,
             'carName': self.carname,
             'company': self.company,
-            'picture': self.picture
+            'picture': img
         }
 
 
@@ -138,15 +148,12 @@ class Car(Resource):
         return CarRecord.serialize(record), 201
 
 
-
     def delete(self, record_id):
         record = CarRecord.query.filter_by(id=record_id)\
             .first_or_404(description='Record with id={} is not available'.format(record_id))
         db.session.delete(record)
         db.session.commit()
         return '', 204
-
-
 
 
 #############################################################################
@@ -160,7 +167,7 @@ with app.app_context():
 
 #
 #
-def insert_car(name,company,picture=None):
+def insert_car(name,company,picture):
     with app.app_context():
         db.session.add(CarRecord(carname=name, company=company, picture=picture))
         try:
@@ -249,8 +256,6 @@ def upload_file():
         '''
 
 
-
-
 @app.route('/ui/<path:path>')
 def send_report(path):
         return send_from_directory('ui', path)
@@ -262,19 +267,10 @@ def multi_add():
         app.logger.info('multi-form data')
         json_data=request.form.get("json_data")
         jd = json.loads(json_data)
+        file_data=request.files['file']
 
-        file_data=request.form.get("file")
-
-        path = os.path.join(app.config['UPLOAD_FOLDER'], 'dragon2.png')
-        file_data.save(path)
-
-        app.logger.info('filedata...')
-        #app.logger.info(file_data)
-        insert_car(jd['carname'],jd['company'])
+        insert_car(jd['carname'],jd['company'],file_data.read())
         return "200 Ok" 
-
-
-
 
 
 #############################################################################

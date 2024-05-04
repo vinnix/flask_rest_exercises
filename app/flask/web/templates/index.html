@@ -1,7 +1,56 @@
 <html>
     <head>
         <script>
-            window.location.href = '/api/submit';
+            <!--   window.location.href = '/api/submit';  -->
         </script>
+		<script type="text/javascript" src="js/bower_components/jquery/dist/jquery.js"></script>
+		
+
+        <script type="text/javascript">
+
+        $.ajax({
+            url: "/cars",
+            type: 'GET',
+            cache: false,
+            success: function(result) {
+		        data = result;
+                //  alert(jQuery.dataType);
+                if (result) {
+                    $(result).each(function(i,val)
+                    {
+                        $.each(val,function(key,val)
+                        {
+                            console.log(key + " : " + val);     
+                        });
+                    }) ;
+                }
+            },
+            error: function() {
+                alert("No");
+            }
+        })
+
+		</script>
+
     <head>
+    <body>
+        <h3> pure test </h3>
+
+        <div id="targetDIV" style="border: 1px solid Red">
+        </div>
+
+           <script>
+                $.getJSON('/cars', function(data) {
+                    $.each(data, function(index) {
+                        console.log(data[index].carName);
+                        console.log(data[index].company);
+                        console.log("<" + data[index].id + ">");
+                    
+                    $("<img src=\"\" id=\"img_"+ data[index].id +"\"    alt=\"Chart_" + data[index].id + "\" height=\"500\" width=\"500\"  >").appendTo("#targetDIV");
+                    document.getElementById("img_"+data[index].id).src = "data:image/png;base64,"+data[index].picture; // set src
+                    });
+                })
+          </script>
+
+    </body>
 </html>

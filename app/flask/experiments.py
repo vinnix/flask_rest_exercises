@@ -13,8 +13,6 @@ from flask import Flask, render_template, request
 import sys
 import os
 import json
-from base64 import b64encode
-
 import binascii
 
 
@@ -72,7 +70,8 @@ class CarRecord(db.Model):
         if self.picture != None:
             img = binascii.b2a_base64(self.picture).decode().rstrip('\n')
         else:
-            img = '<image-empty>'
+            img = '<image-empty>' # breaks brower
+            img = 'iVBORw0KGgoAAAANSUhEUgAAAAgAAAAIAQMAAAD+wSzIAAAABlBMVEX///+/v7+jQ3Y5AAAADklEQVQI12P4AIX8EAgALgAD/aNpbtEAAAAASUVORK5CYII' # elegant empty
 
         return {
             'id': self.id,
@@ -160,10 +159,6 @@ class Car(Resource):
 #
 #############################################################################
 
-## This initialize/create tables and databases based on the DB Model 
-## if not created already
-with app.app_context():
-    db.create_all()
 
 #
 #
@@ -278,7 +273,11 @@ def multi_add():
 #############################################################################
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=app_port)
+    ## This initialize/create tables and databases based on the DB Model 
+    ## if not created already
+    with app.app_context():
+        db.create_all()
+    app.run(host="0.0.0.0", port=app_port, debug=True)
 
 
 

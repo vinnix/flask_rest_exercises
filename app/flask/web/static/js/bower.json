@@ -1,0 +1,15 @@
+{
+  "name": "js",
+  "homepage": "https://github.com/vinnix/flask_rest_exercises",
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

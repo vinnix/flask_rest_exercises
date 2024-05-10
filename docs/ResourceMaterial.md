@@ -20,6 +20,8 @@ Backend:
 * https://github.com/StefanieStoppel/vue-flask-image-upload
 * https://www.j-labs.pl/blog-technologiczny/flask-restful-with-sqlalchemy/
 * https://stackoverflow.com/questions/72359179/flask-restful-api-authorization-for-specific-user-or-admin-user
+* https://docs.docker.com/reference/cli/docker/image/build/
+* https://medium.com/@pooya.oladazimi/dockerizing-flask-app-with-postgres-a-step-by-step-guide-e9fc9939deff
 
 Data:
 * https://dba.stackexchange.com/questions/1742/how-to-insert-file-data-into-a-postgresql-bytea-column
@@ -32,3 +34,17 @@ Network:
 Frontend:
 * https://stackoverflow.com/questions/8499633/how-to-display-base64-images-in-html
 * https://stackoverflow.com/questions/20646822/how-to-serve-static-files-in-fl
+
+
+others:
+* kubernetes:
+  https://medium.com/@shashank.chp09/configuring-kubernetes-cluster-through-kubeadm-utility-on-centos-stream9-with-containerd-54fdd998ddb4
+
+todo:
+* https://stackoverflow.com/questions/76984832/sqlalchemy-exc-argumenterror-column-expression-from-clause-or-columns-clause
+* https://stackoverflow.com/questions/71874222/sqlmodel-sqlalchemy-exc-argumenterror-column-expression-or-from-clause-expecte
+* https://stackoverflow.com/questions/77251329/importerror-cannot-import-name-db-from-partially-initialized-module-app
+* https://medium.com/@dennisivy/flask-restful-crud-api-c13c7d82c6e5
+* https://blog.devgenius.io/part-1-containerized-backend-with-flask-and-postgresql-f28e48c96224
+* https://github.com/khristoforovs/flask-postgres-docker-compose-simple-app/blob/master/docker-compose.yml
+* https://www.openbookproject.net/books/pythonds/
